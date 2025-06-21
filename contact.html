@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact | Raja Babu Adavi</title>
+  <link rel="stylesheet" href="contact.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    @keyframes fadeGlow {
+      0% {
+        opacity: 0;
+        transform: scale(0.95);
+        text-shadow: none;
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    #formMessage {
+      margin-top: 15px;
+      font-size: 1rem;
+      text-align: center;
+      font-weight: bold;
+      display: none;
+    }
+
+    #formMessage.success {
+      display: block;
+      color: #0f0;
+      animation: fadeGlow 0.8s ease-in-out;
+      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0, 0 0 20px #0f0;
+    }
+
+    #formMessage.error {
+      display: block;
+      color: #f00;
+      animation: fadeGlow 0.8s ease-in-out;
+      text-shadow: 0 0 5px #f00, 0 0 10px #f00, 0 0 20px #f00;
+    }
+
+    button[type="submit"] {
+      background-color: #0ff;
+      border: none;
+      padding: 10px 20px;
+      color: black;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      box-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+      transition: all 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0cf;
+      box-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
+    }
+
+    button[type="submit"]:active {
+      transform: scale(0.98);
+      box-shadow: 0 0 5px #0ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="animated-background"></div>
+
+  <nav class="navbar">
+    <ul class="nav-links">
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../about/about.html">About</a></li>
+      <li><a href="../work/work.html">Work</a></li>
+      <li><a href="../creative/creative.html">Creative</a></li>
+      <li><a href="../projects/proj.html">Projects</a></li>
+      <li><a href="../contact/contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="contact-container">
+    <h1 class="glow-title">Get in Touch</h1>
+    <form class="contact-form" id="contactForm" method="POST" action="/send">
+      <input type="text" name="name" placeholder="Your Name" required />
+      <input type="email" name="email" placeholder="Your Email" required />
+      <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+      <div id="formMessage"></div>
+    </form>
+
+    <div class="contact-info">
+      <i class="fas fa-phone-alt glowing-icon"></i>
+      <p class="phone-text">For more queries, call: <strong>7989394250</strong></p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const formMessage = document.getElementById('formMessage');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        name: form.name.value,
+        email: form.email.value,
+        message: form.message.value
+      };
+
+      try {
+        const res = await fetch('/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        if (res.ok) {
+          formMessage.textContent = 'Your message was sent successfully!';
+          formMessage.className = 'success';
+          form.reset();
+        } else {
+          throw new Error('Email failed');
+        }
+      } catch (err) {
+        formMessage.textContent = 'There was an error sending your message.';
+        formMessage.className = 'error';
+      }
+
+      formMessage.style.display = 'block';
+
+      setTimeout(() => {
+        formMessage.style.display = 'none';
+      }, 4000);
+    });
+  </script>
+</body>
+</html>
